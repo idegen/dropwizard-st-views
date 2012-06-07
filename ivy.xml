@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ivy-module version="2.0">
+    <info organisation="toughtworks" module="dropwizard-st"/>
+    <configurations defaultconfmapping="*->*,!sources,!javadoc">
+        <conf name="compile"/>
+        <conf name="test" visibility="private"/>
+    </configurations>
+    <dependencies>
+        <!--Production Libraries-->
+        <dependency org="org.antlr" name="stringtemplate" rev="3.2" conf="compile"/>
+
+        <dependency org="com.google.guava" name="guava" rev="12.0" conf="compile"/>
+        <dependency org="org.codehaus.jackson" name="jackson-core-asl" rev="1.9.7" transitive="false" conf="compile"/>
+        <dependency org="com.yammer.metrics" name="metrics-core" rev="2.1.2"  conf="compile"/>
+        <dependency org="com.sun.jersey" name="jersey-core" rev="1.12" transitive="false" conf="compile"/>
+        <dependency org="org.eclipse.jetty" name="jetty-util" rev="8.1.3.v20120416" transitive="false" conf="compile"/>
+        <dependency org="com.yammer.dropwizard" name="dropwizard-core" rev="0.4.0" transitive="false" conf="compile"/>
+
+        <!--Test-->
+        <dependency org="junit" name="junit" rev="4.10" conf="test"/>
+        <dependency org="org.hamcrest" name="hamcrest-core" rev="1.2.1" conf="test">
+            <exclude conf="compile"/>
+        </dependency>
+    </dependencies>
+</ivy-module>

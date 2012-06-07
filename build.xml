@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<project basedir="." name="Dropwizard String Template Views" default="all" xmlns:ivy="antlib:org.apache.ivy.ant">
+    <import file="${basedir}/macros.xml"/>
+
+    <property name="build.dir" value="${basedir}/build"/>
+    <property name="tools.dir" value="${basedir}/tools"/>
+    <property name="ivy.dir" value="${tools.dir}/apache-ivy-2.3.0-rc1"/>
+    <property name="app.name" value="dropwizard-st-views"/>
+    <property name="main.dir" value="${basedir}/src/"/>
+    <property name="src.dir" value="${main.dir}/java"/>
+    <property name="web.dir" value="${main.dir}/resources"/>
+    <property name="test.dir" value="${basedir}/src/test"/>
+    <property name="lib.dir" value="${basedir}/lib"/>
+    <property name="release.lib.dir" value="${lib.dir}/release"/>
+    <property name="test.lib.dir" value="${lib.dir}/test"/>
+    <property name="build.report.dir" value="${build.dir}/report"/>
+    <property name="dist.dir" value="${build.dir}/dist"/>
+    <property name="src.build.dir" value="${dist.dir}/classes"/>
+
+    <!-- Unit Tests Properties-->
+    <property name="unit.test.src" value="${test.dir}/unit"/>
+    <property name="unit.test.build.dir" value="${build.dir}/unittests"/>
+    <property name="unit.test.report.dir" value="${build.report.dir}/unittests"/>
+
+    <!-- Test Utilities Properties-->
+    <property name="test.utilities.src" value="${test.dir}/utils"/>
+    <property name="test.utilities.build.dir" value="${build.dir}/test-utilities"/>
+
+    <tstamp>
+        <format property="build.timestamp" pattern="yyyyMMdd'T'HHmmss.SSS"/>
+    </tstamp>
+
+    <!-- Manage Dependencies -->
+    <path id="ivy.lib.path">
+        <fileset dir="${ivy.dir}" includes="*.jar"/>
+    </path>
+
+    <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+
+    <target name="ivy.retrieve">
+        <ivy:retrieve pattern="${release.lib.dir}/[artifact]-[revision](-[classifier]).[ext]" conf="compile"/>
+        <ivy:retrieve pattern="${test.lib.dir}/[artifact]-[revision](-[classifier]).[ext]" conf="test"/>
+    </target>
+
+
+    <target name="ivy.clean">
+        <ivy:cleancache/>
+        <echo message="${ivy.cache.dir}"/>
+        <delete dir="${ivy.cache.dir}"/>
+    </target>
+
+
+    <!-- Paths -->
+    <path id="release.classpath">
+        <fileset dir="${lib.dir}/release" includes="**/*.jar"/>
+    </path>
+
+    <path id="tools.classpath">
+        <fileset dir="${tools.dir}" includes="**/*.jar"/>
+    </path>
+
+    <path id="test.classpath">
+        <path refid="release.classpath"/>
+        <fileset dir="${test.lib.dir}" includes="**/*.jar"/>
+        <pathelement path="tools.classpath"/>
+        <pathelement path="${src.build.dir}"/>
+        <pathelement path="${unit.test.build.dir}"/>
+        <pathelement path="${test.utilities.build.dir}"/>
+    </path>
+
+    <!-- TASKS -->
+    <target name="clean" description="Remove directories created as part of the build process">
+        <echo message="${java.home}"/>
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="compile" description="Compile Source code">
+        <compile src="${src.dir}" dest="${src.build.dir}" classpath="release.classpath"/>
+
+    </target>
+
+    <target name="compile.test.utilities" depends="compile">
+        <compile src="${test.utilities.src}" dest="${test.utilities.build.dir}" classpath="test.classpath"/>
+    </target>
+
+    <target name="compile.unit.test" depends="compile, compile.test.utilities">
+        <compile src="${unit.test.src}" dest="${unit.test.build.dir}" classpath="test.classpath"/>
+    </target>
+
+    <!-- Run tests -->
+    <target name="unit.tests" depends="clean,compile.unit.test">
+        <unit.test.and.report type="unit" classpath="test.classpath"/>
+    </target>
+
+
+    <!-- Deployment Tasks -->
+    <target name="create.artifact" depends="compile" description="Creates Runnable Jar">
+        <jar destfile="${dist.dir}/${app.name}.jar" duplicate="preserve">
+            <manifest>
+                <!--TODO add BUILD-JDK and build.timestamp and Created-BY-->
+                <attribute name="Build-Time" value="${build.timestamp}"/>
+            </manifest>
+            <fileset dir="${src.build.dir}"/>
+            <zipgroupfileset dir="${release.lib.dir}" includes="**/*.jar"/>
+
+        </jar>
+    </target>
+
+    <target name="all" depends="unit.tests, create.artifact" />
+</project>

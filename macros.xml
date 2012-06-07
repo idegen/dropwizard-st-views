@@ -1,0 +1,39 @@
+<project>
+    <macrodef name="compile">
+        <attribute name="src"/>
+        <attribute name="dest"/>
+        <attribute name="classpath"/>
+        <sequential>
+            <mkdir dir="@{dest}"/>
+            <javac encoding="utf8" srcdir="@{src}" destdir="@{dest}" debug="true" includes="**/*.java" includeantruntime="false" source="1.5" target="1.5">
+                <classpath refid="@{classpath}"/>
+            </javac>
+            <copy todir="@{dest}">
+                <fileset dir="@{src}" excludes="**/*.java"/>
+            </copy>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="unit.test.and.report">
+        <attribute name="type"/>
+        <attribute name="classpath"/>
+        <sequential>
+            <mkdir dir="${@{type}.test.report.dir}"/>
+            <junit haltonfailure="no" printsummary="on" fork="no" failureproperty="@{type}.tests.failed">
+                <formatter type="xml"/>
+                <classpath refid="@{classpath}"/>
+                <batchtest todir="${@{type}.test.report.dir}">
+                    <fileset dir="${@{type}.test.src}" includes="**/*Test.java"/>
+                    <fileset dir="${@{type}.test.src}" includes="**/*Tests.java"/>
+                </batchtest>
+            </junit>
+            <junitreport todir="${@{type}.test.report.dir}">
+                <fileset dir="${@{type}.test.report.dir}">
+                    <include name="TEST-*.xml"/>
+                </fileset>
+                <report format="frames" todir="${@{type}.test.report.dir}/html"/>
+            </junitreport>
+            <fail if="@{type}.tests.failed" message="@{type} tests failed"/>
+        </sequential>
+    </macrodef>
+</project>
