@@ -1,15 +1,7 @@
-*.class
-# Package Files #
-*.jar
-*.war
-*.ear
 build/
 out/
 .idea/
 *.iws
 .DS_Store
 target/
-data
-build/
-out/
 
