@@ -9,7 +9,7 @@ import com.yammer.dropwizard.config.Environment;
  * <p>A view combines a StringTemplate template with a set of Java objects:</p>
  *
  * <pre><code>
- * public class PersonView extends View {
+ * public class PersonView extends ViewInheritance {
  *     private final Person person;
  *
  *     public PersonView(Person person) {

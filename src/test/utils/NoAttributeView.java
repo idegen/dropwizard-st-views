@@ -1,7 +1,14 @@
 import com.dropwizard.views.st.View;
 
-public class NoAttributeView extends View {
+public class NoAttributeView implements View {
+    private String templateName;
+
     protected NoAttributeView(String templateName) {
-        super(templateName);
+        this.templateName = templateName;
+    }
+
+    @Override
+    public String getTemplateName() {
+        return templateName;
     }
 }

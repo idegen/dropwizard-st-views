@@ -1,11 +1,12 @@
 import com.dropwizard.views.st.View;
 
-public class TestViewWithAttributes extends View {
+public class TestViewWithAttributes implements View {
+    private String templateName;
     private String url;
     private String linkText;
 
     protected TestViewWithAttributes(String templateName, String url, String linkText) {
-        super(templateName);
+        this.templateName = templateName;
         this.url = url;
         this.linkText = linkText;
     }
@@ -16,5 +17,10 @@ public class TestViewWithAttributes extends View {
 
     public String getLinkText() {
         return linkText;
+    }
+
+    @Override
+    public String getTemplateName() {
+        return templateName;
     }
 }

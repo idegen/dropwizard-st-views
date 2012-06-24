@@ -23,7 +23,7 @@ public class ViewMessageBodyWriterTest {
     @Test
     public void shouldLoadStringTemplatesGroup() {
         //When
-        StringTemplate template = writer.getTemplate(new TestViewWithAttributes("test.st", "SomeUrl", "A Text of Some Sort"));
+        StringTemplate template = writer.getTemplate(new TestViewWithAttributes("test", "SomeUrl", "A Text of Some Sort"));
 
         //Then
         assertThat(template.getTemplate(), startsWith("<li><a href="));
@@ -45,7 +45,7 @@ public class ViewMessageBodyWriterTest {
     @Test
     public void shouldReplaceTheAttributes() throws IOException {
         //Given
-        TestViewWithAttributes view = new TestViewWithAttributes("test.st", "SomeUrl", "A Text of Some Sort");
+        TestViewWithAttributes view = new TestViewWithAttributes("test", "SomeUrl", "A Text of Some Sort");
         OutputStream responseStream = new ByteArrayOutputStream();
 
         //When
@@ -58,7 +58,7 @@ public class ViewMessageBodyWriterTest {
     @Test
     public void canDealWithEncodingProperly() throws IOException {
         //Given
-        NoAttributeView view = new NoAttributeView("encodingTest.st");
+        NoAttributeView view = new NoAttributeView("encodingTest");
         OutputStream responseStream = new ByteArrayOutputStream();
 
         //When

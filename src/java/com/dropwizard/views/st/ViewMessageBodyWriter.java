@@ -1,6 +1,7 @@
 package com.dropwizard.views.st;
 
 import com.google.common.base.Charsets;
+import com.yammer.metrics.Metrics;
 import com.yammer.metrics.core.TimerContext;
 import org.antlr.stringtemplate.NoIndentWriter;
 import org.antlr.stringtemplate.StringTemplate;
@@ -43,7 +44,7 @@ public class ViewMessageBodyWriter implements MessageBodyWriter<View> {
     }
 
     @Override
-    public long getSize(View t,
+    public long getSize(View view,
                         Class<?> type,
                         Type genericType,
                         Annotation[] annotations,
@@ -76,7 +77,7 @@ public class ViewMessageBodyWriter implements MessageBodyWriter<View> {
 //        } finally {
 //            context.stop();
 //        }
-        TimerContext context = view.getRenderingTimer().time();
+        TimerContext context = Metrics.newTimer(view.getClass(), "rendering").time();
         StringTemplate template = getTemplate(view);
         template.setAttribute("view", view);
         OutputStreamWriter writer = new OutputStreamWriter(responseStream, Charsets.UTF_8);
@@ -87,6 +88,6 @@ public class ViewMessageBodyWriter implements MessageBodyWriter<View> {
     }
 
     public StringTemplate getTemplate(View view) {
-        return group.getInstanceOf(view.getTemplateName());
+        return group.getInstanceOf(view.getTemplateName().replace(".st", ""));
     }
 }
