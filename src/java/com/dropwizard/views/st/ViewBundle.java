@@ -50,13 +50,15 @@ import com.yammer.dropwizard.config.Environment;
  */
 public class ViewBundle implements Bundle {
     private String templateFolder;
+    private int refreshInterval;
 
-    public ViewBundle(String templateFolder) {
+    public ViewBundle(String templateFolder, int refreshInterval) {
         this.templateFolder = templateFolder;
+        this.refreshInterval = refreshInterval;
     }
 
     @Override
     public void initialize(Environment environment) {
-        environment.addProvider(new ViewMessageBodyWriter(templateFolder));
+        environment.addProvider(new ViewMessageBodyWriter(templateFolder, refreshInterval));
     }
 }

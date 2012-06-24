@@ -23,13 +23,11 @@ import java.lang.reflect.Type;
 public class ViewMessageBodyWriter implements MessageBodyWriter<View> {
     private StringTemplateGroup group;
 
-    public ViewMessageBodyWriter(String templateFolder) {
-        //TODO: try to remove headers form here
+    public ViewMessageBodyWriter(String templateFolder, int refreshInterval) {
         String groupName = "dropwizard-st";
         group = new StringTemplateGroup(groupName, templateFolder);
         group.setFileCharEncoding(Charsets.UTF_8.name());
-        //TODO: implement cache configuration
-//        group.setRefreshInterval(xxx);
+        group.setRefreshInterval(refreshInterval);
         //TODO: ability for named templates registration
     }
 

@@ -17,7 +17,7 @@ public class ViewMessageBodyWriterTest {
 
     @Before
     public void setUp() {
-        writer = new ViewMessageBodyWriter("/Users/isabella/works/dropwizard-st-views/src/resources/templates");
+        writer = new ViewMessageBodyWriter("/Users/isabella/works/dropwizard-st-views/src/resources/templates", Integer.MAX_VALUE);
     }
 
     @Test
